@@ -1,3 +1,6 @@
+# The idea here is to emulate what I saw in the other code,
+# essentially a command line argument as to who is hosting and who is connecting
+
 #<<<<<<< HEAD
 DIR = 'direction' # 'left', 'right', 'up', 'down'?
 COORD = 'xy' #'x, y tuple'
@@ -20,8 +23,7 @@ HOST = "host"
 
 ####### "HOST" #######
 # For receiving initial connection 
-class InitFactory(Factory):
-    init_prot = Initconn
+
 
 class InitConn(Protocol):
     def connectionMade(self):
@@ -33,18 +35,40 @@ class InitConn(Protocol):
     def dataReceived(self, data):
         pass
 
+class InitFactory(Factory):
+    init_prot = Initconn
+
 class GameHostFactory(Factory):
     protocol = GameHostConn
 
-class GameHostconn(Protocol):
+class GameHostConn(Protocol):
     def connectionMade(self):
         connections['hgame'] = self
+    gs.main("p1")
+    loop = LoopingCall(gs.iteration)
+    loop.start(float(1/60))
+     def dataReceived(self, data):
+            game.get_remote(data)
 
 
-class ClientConn(Protocol):
+class GameClientConn(Protocol):
     def dataReceived(self, data):
-        if(data == START_GAME):
-            reactor.connectTCP(result[0], GameClientFactory())
+        gs.get_remote(data)
+
+class GameClientFactory(ClientFactory):
+    def buildProtocol(self, addr):
+        connections['game'] = self
+    gs.main("p2")
+    loop = LoopingCall(gs.iteration)
+    loop.start(float(1/60)) 
+    return connections['game']
+
+    def clientConnectionLost(self, connector, reason):
+        print "ERROR: Lost Connection\n", reason
+    def clientConnectionFailed(self, connector, reason):
+        print "ERROR: Connection Failed\n", reason
+
+
 
 if __name__ == '__main__':
     connections = {}

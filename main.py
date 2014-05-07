@@ -18,7 +18,7 @@ from network import HEALTH
 
 # Class gamespace
 class GameSpace:
-	def main(self):
+	def main(self, localPlayer):
 		# Basic init
 		pygame.init()
 		self.damage = 10
@@ -32,7 +32,7 @@ class GameSpace:
 		self.player2 = Player(self, 'player2.png', self, False)
 		
 		#Determine whether local player is player 1 or player 2
-		localPlayer = sys.argv[1]
+		#localPlayer = sys.argv[1]
 		
 		localCoordinates = (200, 110)
 		awayCoordinates = (200, 300)
@@ -48,11 +48,11 @@ class GameSpace:
 		self.projectileList = []
 
 	# Game single iteration loop
-	def iteration(self, remote_info):
-		
-		# update player2's data from network
-		self.player2.sprite_info = remote_info
 
+	def get_remote(self, data):
+		self.player2.sprite_info = pickle.loads(data)
+	def iteration(self):
+		# update player2's data from network
 		# Handle firing from mouse click
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:

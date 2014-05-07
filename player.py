@@ -18,7 +18,7 @@ from network import HEALTH
 SPEED = 5
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, fname, gs = None, isLocal):
+    def __init__(self, fname, gs = None, isLocal=True):
         # pass gamespace
         self.gs = gs
         # load image from argument
