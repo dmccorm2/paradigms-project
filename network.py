@@ -21,7 +21,6 @@ FPS = 60
 class GameHostConn(Protocol):
     def connectionMade(self):
         print "Created game connection"
-        connections['hgame'] = self
         game.main("p1")
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
@@ -30,12 +29,15 @@ class GameHostConn(Protocol):
         game.get_remote(data)
 
 class GameHostFactory(Factory):
-    protocol = GameHostConn
+    def buildProtocol(self, addr):
+        print "Made to Game Factory..."
+        protocol = GameHostConn()
+        connections['game'] = protocol
+        return protocol
 
 class InitConn(Protocol):
     def connectionMade(self):
         print "Other player joined..."
-        connections['init'] = self
         self.transport.write("start game")
         # Using listenTCP instead of endpoints to make code more flexible
         reactor.listenTCP(GAME_PORT, GameHostFactory()) # Initial connection made to 
@@ -43,7 +45,11 @@ class InitConn(Protocol):
         pass
 
 class InitFactory(Factory):
-    init_prot = InitConn
+    def buildProtocol(self, addr):
+        print "Listening in factory..."
+        init_prot = InitConn()
+        connections['init'] = init_prot
+        return init_prot
 
 ##################################
 
@@ -95,7 +101,6 @@ if __name__ == '__main__':
     connections = {}
     game_data = {} # to be passed to game function as keyword arguments
     # Determine if host, otherwise connect
-    print sys.argv[1]
     if(sys.argv[1] == "host"):
         reactor.listenTCP(INIT_PORT, InitFactory())
     elif(sys.argv[1] == "join"):
