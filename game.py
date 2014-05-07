@@ -10,10 +10,10 @@ import cPickle as pickle
 
 
 #Constants for getting data from network packet
-from network import ANGLE
-from network import COORD
-from network import FIRE
-from network import HEALTH
+from Utilities import ANGLE
+from Utilities import COORD
+from Utilities import FIRE
+from Utilities import HEALTH
 
 
 # Class gamespace
@@ -28,8 +28,8 @@ class GameSpace:
 		self.rect = pygame.Rect(0, 0, 640, 480)
 		
 		# Init game objects
-		self.player1 = Player(self, 'player1.png', self, True)
-		self.player2 = Player(self, 'player2.png', self, False)
+		self.player1 = Player('player1.png', True, self)
+		self.player2 = Player('player2.png', False, self)
 		
 		#Determine whether local player is player 1 or player 2
 		#localPlayer = sys.argv[1]
@@ -102,10 +102,10 @@ class GameSpace:
 		return data
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
 
-	# Declare gamespace
-	gs = GameSpace()
-	gs.main()
+# 	# Declare gamespace
+# 	gs = GameSpace()
+# 	gs.main()
 	

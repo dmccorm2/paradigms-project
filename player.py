@@ -10,19 +10,20 @@ import Utilities
 
 from projectile import Projectile
 
-from network import ANGLE
-from network import COORD
-from network import FIRE
-from network import HEALTH
+from Utilities import ANGLE
+from Utilities import COORD
+from Utilities import FIRE
+from Utilities import HEALTH
 
 SPEED = 5
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, fname, gs = None, isLocal=True):
+    def __init__(self, fname, isLocal, gs = None):
         # pass gamespace
         self.gs = gs
         # load image from argument
-        self.image_name = "res/" + fname
+        print str(fname)
+        self.image_name = "res/" + str(fname)
         self.image = pygame.image.load(self.image_name).convert()
         self.rect = self.image.get_rect()
 
