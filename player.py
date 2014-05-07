@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.image_name = "res/" + str(fname)
         self.image = pygame.image.load(self.image_name).convert()
         self.rect = self.image.get_rect()
-
+        self.explosionCounter = 0
         #Used to determine if this player is the local or networked player
         self.isLocal = isLocal
 
@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         
         # original image to avoid resize errors
         self.orig_image = self.image
-        
+        self.explosionImages = []
         # load the explosion images for when the player explodes
         for i in range(0, 17):
             filename = ""
@@ -133,7 +133,7 @@ class Player(pygame.sprite.Sprite):
         if index <= 16:
             self.image =self.explosionImages[index]
         else:
-            self.image = pygame.image.load("empty.png").convert()
+            self.image = pygame.image.load("res/empty.png").convert()
 
     # function to calculate rotation angle from mouse direction
     def calculate_angle(self):

@@ -11,9 +11,12 @@ from Utilities import COORD
 from Utilities import FIRE
 from Utilities import HEALTH
 game = GameSpace()
+GAME_PORT = 8002
+INIT_PORT = 8000
+HOST_NAME = ""
+FPS = 60
 
-
-####### "HOST" #######
+####### "HOST" BRANCH ####################
 # For receiving initial connection
 class GameHostConn(Protocol):
     def connectionMade(self):
@@ -31,16 +34,34 @@ class GameHostFactory(Factory):
 class InitConn(Protocol):
     def connectionMade(self):
         connections['init'] = self
+        self.transport.write("start game")
     # Using listenTCP instead of endpoints to make code more flexible
-    game_server = reactor.listenTCP(GameHostFactory(), GAME_PORT) # Initial connection made to 
-    self.transport.write("start game")
-
+    reactor.listenTCP(GAME_PORT, GameHostFactory()) # Initial connection made to 
     def dataReceived(self, data):
         pass
 
 class InitFactory(Factory):
-    init_prot = Initconn
+    init_prot = InitConn
 
+##################################
+
+##### CLIENT BRANCH############
+class InitClientConn(Protocol):
+    def dataReceived(self, data):
+        if(data == "start game"):
+            reactor.connectTCP(HOST_NAME, GAME_PORT, GameClientFactory())
+
+
+class InitClientFactory(ClientFactory):
+    def startedConnecting(self, connector):
+        print "Began Initial Connection"
+    def buildProtocol(self, addr):
+        connections['initc'] = InitClientConn()
+
+    def clientConnectionLost(self, connector, reason):
+        print "ERROR: Lost initial connection\n", reason
+    def clientConnectionFailed(self, connector, reason):
+        print "ERROR: Could not establish initial connection\n", reason
 
 class GameClientConn(Protocol):
     def dataReceived(self, data):
@@ -60,20 +81,21 @@ class GameClientFactory(ClientFactory):
     def clientConnectionFailed(self, connector, reason):
         print "ERROR: Connection Failed\n", reason
 
-
+#######################################
 
 if __name__ == '__main__':
     connections = {}
     game_data = {} # to be passed to game function as keyword arguments
     # Determine if host, otherwise connect
-
-    if(sys.argv[1] == HOST):
+    print sys.argv[1]
+    if(sys.argv[1] == "host"):
         reactor.listenTCP(INIT_PORT, InitFactory())
-    elif(sys.argv[1] == JOIN):
-        reactor.connectTCP(sys.argv[2], GAME_PORT, ClientFactory())
+    elif(sys.argv[1] == "join"):
+        HOST_NAME = sys.argv[2]
+        reactor.connectTCP(sys.argv[2], INIT_PORT, InitClientFactory())
         
     # Start loop at 60FPS
-    loop = LoopingCall(game.iteration, game_data)
+    loop = LoopingCall(game.iteration)
     loop.start(float(1/FPS))
 
     reactor.run()
