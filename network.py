@@ -60,6 +60,7 @@ class InitClientFactory(ClientFactory):
     def buildProtocol(self, addr):
         print "Building client game connection"
         connections['init'] = InitClientConn()
+        return connections['init']
 
     def clientConnectionLost(self, connector, reason):
         print "ERROR: Lost initial connection\n", reason
@@ -67,6 +68,8 @@ class InitClientFactory(ClientFactory):
         print "ERROR: Could not establish initial connection\n", reason
 
 class GameClientConn(Protocol):
+    def connectionMade(self):
+        print "connected to game host"
     def dataReceived(self, data):
         game.get_remote(data)
 
@@ -75,7 +78,6 @@ class GameClientFactory(ClientFactory):
         print "Began game connection with host"
     def buildProtocol(self, addr):
         connections['game'] = self
-
         game.main("p2")
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
