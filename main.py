@@ -6,14 +6,15 @@ import math
 import sys
 from player import Player
 from projectile import Projectile
-
+import cPickle as pickle 
 
 
 #Constants for getting data from network packet
 from network import ANGLE
 from network import COORD
 from network import FIRE
-from network import HEALTH  
+from network import HEALTH
+
 
 # Class gamespace
 class GameSpace:
@@ -47,10 +48,10 @@ class GameSpace:
 		self.projectileList = []
 
 	# Game single iteration loop
-	def iteration(self, x, y, angle, fired, health):
+	def iteration(self, remote_info):
 		
 		# update player2's data from network
-		self.player2.sprite_info = self.assemble_data(x, y, angle, fired, health)
+		self.player2.sprite_info = remote_info
 
 		# Handle firing from mouse click
 		for event in pygame.event.get():
@@ -102,6 +103,8 @@ class GameSpace:
 
 
 if __name__ == '__main__':
+
+
 	# Declare gamespace
 	gs = GameSpace()
 	gs.main()
