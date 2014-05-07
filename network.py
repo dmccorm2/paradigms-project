@@ -80,10 +80,10 @@ class GameClientConn(Protocol):
         game.get_remote(data)
 
 class GameClientFactory(ClientFactory):
-    def startedConnecting(sef, connector):
+    def startedConnecting(self, connector):
         print "Began game connection with host"
     def buildProtocol(self, addr):
-        connections['game'] = self
+        connections['game'] = GameClientConn()
         game.main("p2")
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
