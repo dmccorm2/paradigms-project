@@ -1,9 +1,7 @@
 from game import GameSpace
 from twisted.internet import reactor
-from twisted.internet.defer import DeferredQueue
 from twisted.internet.task import LoopingCall
 from twisted.internet.protocol import Factory, Protocol, ClientFactory
-from twisted.internet.endpoints import TCP4ServerEndpoint
 import sys
 
 # Global Variables
@@ -33,6 +31,7 @@ class GameHostConn(Protocol):
     def dataReceived(self, data):
        game.get_remote(data)
 
+# use clientFactory to buildProtocol automatically
 class GameHostFactory(ClientFactory):
     protocol = GameHostConn
 
@@ -54,6 +53,7 @@ class InitFactory(ClientFactory):
 ##################################
 
 ##### CLIENT BRANCH############
+# mirror's host connection, but connects to designated host (see main)
 class InitClientConn(Protocol):
     def connectionMade(self):
         connections['init'] = self
@@ -95,17 +95,13 @@ class GameClientFactory(ClientFactory):
 
 if __name__ == '__main__':
     connections = {}
-    game_data = {} # to be passed to game function as keyword arguments
-    # Determine if host, otherwise connect
-    if(sys.argv[1] == "host"):
+    
+    # Determine if host, or joining a host for a game
+    if(sys.argv[1] == "host"): # if host, begin listening for another player
         reactor.listenTCP(INIT_PORT, InitFactory())
-    elif(sys.argv[1] == "join"):
+    elif(sys.argv[1] == "join"): # if joining a host, provide host name
         HOST_NAME = sys.argv[2]
         reactor.connectTCP(sys.argv[2], INIT_PORT, InitClientFactory())
-        
-    # Start loop at 60FPS
-    # loop = LoopingCall(game.iteration)
-    # loop.start(float(1/FPS))
 
     reactor.run()
 
