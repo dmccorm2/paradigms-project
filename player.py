@@ -15,7 +15,7 @@ from Utilities import COORD
 from Utilities import FIRE
 from Utilities import HEALTH
 
-SPEED = 5
+SPEED = 1
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, fname, isLocal, gs = None):

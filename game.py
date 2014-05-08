@@ -81,7 +81,7 @@ class GameSpace:
 
 
 	def display_game(self):
-		#self.screen.fill(self.black)
+		self.screen.fill(self.black)
 		
 		for projectile in self.projectileList:
 			self.screen.blit(projectile.image, projectile.rect)
