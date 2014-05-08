@@ -140,7 +140,7 @@ class Player(pygame.sprite.Sprite):
         mx, my = pygame.mouse.get_pos()
         px, py = self.rect.center
 
-        rotationRad = math.atan2(px, py)
+        rotationRad = math.atan2(px - mx, py - my)
         
         #TODO: Might need to add a constant to this
         rotationDeg = math.degrees(rotationRad) 
