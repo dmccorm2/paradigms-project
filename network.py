@@ -6,35 +6,38 @@ from twisted.internet.protocol import Factory, Protocol, ClientFactory
 from twisted.internet.endpoints import TCP4ServerEndpoint
 import sys
 
-from Utilities import ANGLE
-from Utilities import COORD
-from Utilities import FIRE
-from Utilities import HEALTH
+# Global Variables
 game = GameSpace()
 GAME_PORT = 9002
 INIT_PORT = 9000
 HOST_NAME = ""
 FPS = 60
 
+# Function to write data from GameSpace to transport
 def send_data(data):
     connections['game'].transport.write(data)
 
 ####### "HOST" BRANCH ####################
 # For receiving initial connection
+
+# Connection protocol for the game connection (host)
 class GameHostConn(Protocol):
     def connectionMade(self):
         print "Created game connection"
         connections['game'] = self
+        # After connecting, init game and begin loop
         game.main("p1", send_data)
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
-
+    # When data received, send to GameSpace
     def dataReceived(self, data):
        game.get_remote(data)
 
 class GameHostFactory(ClientFactory):
     protocol = GameHostConn
 
+# initial connection for listening for a client, before beginning game connection
+# (perhaps unnecessary and redundant)
 class InitConn(Protocol):
     def connectionMade(self):
         print "Other player joined..."
