@@ -11,8 +11,8 @@ from Utilities import COORD
 from Utilities import FIRE
 from Utilities import HEALTH
 game = GameSpace()
-GAME_PORT = 8002
-INIT_PORT = 8000
+GAME_PORT = 9002
+INIT_PORT = 9000
 HOST_NAME = ""
 FPS = 60
 

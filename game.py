@@ -55,7 +55,7 @@ class GameSpace:
 		try:
 			self.player2.sprite_info = pickle.loads(data)
 			pprint.pprint(self.player2.sprite_info)
-			self.player2.rect = self.player2.rect.move(self.player2.sprite_info[COORD])
+			#self.player2.rect = self.player2.rect.move(self.player2.sprite_info[COORD])
 		except Exception, e:
 			print e
 		# print self.player2.sprite_info[COORD]
