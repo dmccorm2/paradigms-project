@@ -5,9 +5,6 @@ import pygame
 import math
 import Utilities
 
-# To-do:
-# 	Save to data structure
-
 from projectile import Projectile
 
 from Utilities import ANGLE
@@ -50,7 +47,7 @@ class Player(pygame.sprite.Sprite):
                 filename = "res/explosion/frames0" + str(i) + "a.png"
             self.explosionImages.append(pygame.image.load(filename).convert())
 
-
+   # Process keyboard input, update CHANGE IN COORDINATES for player n
     def move(self, eventList):
         if eventList[pygame.K_a]:
             self.sprite_info[COORD] = (-SPEED, 0)
@@ -61,9 +58,6 @@ class Player(pygame.sprite.Sprite):
         elif eventList[pygame.K_s]:
             self.sprite_info[COORD] = (0, SPEED)
             
-       # self.rect = self.rect.move(self.sprite_info[COORD])
-        
-        #FIXME: Send the data to the network
 
     #Update the current player's variables
     def update(self):
@@ -81,12 +75,7 @@ class Player(pygame.sprite.Sprite):
         #Calculate rotation, only if local player
         if self.isLocal:
             self.sprite_info[ANGLE] = self.calculate_angle()
-        # if not self.isLocal:
-        #     self.rect = self.rect.move(self.sprite_info[COORD])
-        
-        #orig_rect = self.rect
-        #self.rect = self.rect.move(self.sprite_info[COORD])
-                
+
         if self.sprite_info[FIRE] == True:
             rotationRad = math.radians(self.sprite_info[ANGLE])
             
@@ -142,8 +131,7 @@ class Player(pygame.sprite.Sprite):
         px, py = self.rect.center
 
         rotationRad = math.atan2(px - mx, py - my)
-        
-        #TODO: Might need to add a constant to this
+ 
         rotationDeg = math.degrees(rotationRad) 
 
         return rotationDeg
