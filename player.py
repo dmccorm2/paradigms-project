@@ -96,7 +96,7 @@ class Player(pygame.sprite.Sprite):
             xspeed = -(math.cos(projectileRad) * speedMultiplier + (math.pi / 2))
             yspeed = math.sin(projectileRad) * speedMultiplier + (math.pi / 2)
             
-            newProjectile = Projectile(self.gs, self.rect.centerx, self.rect.centery, xspeed, yspeed)
+            newProjectile = Projectile(self.gs, self.rect.centerx + (20 * xspeed), self.rect.centery + (20 * yspeed), xspeed, yspeed, self.sprite_info[ANGLE])
             
             # add to projectile list
             self.gs.projectileList.append(newProjectile)
