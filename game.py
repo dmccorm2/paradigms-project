@@ -39,11 +39,11 @@ class GameSpace:
 		
 		#Make the player start at the right place
 		if localPlayer == "p1":
-			self.player1.sprite_info[COORD] = localCoordinates
-			self.player2.sprite_info[COORD] = awayCoordinates
+			self.player1.rect.center = localCoordinates
+			self.player2.rect.center = awayCoordinates
 		else:
-			self.player1.sprite_info[COORD] = awayCoordinates
-			self.player2.sprite_info[COORD] = localCoordinates		
+			self.player1.rect.center = awayCoordinates
+			self.player2.rect.center = localCoordinates		
 
 		self.projectileList = []
 
