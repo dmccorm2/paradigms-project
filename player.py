@@ -64,7 +64,8 @@ class Player(pygame.sprite.Sprite):
     #Update the current player's variables
     def update(self):
         #Update the right set of images and variables depending on whether the player is still alive
-        if self.sprite_info[HEALTH] <= 0:
+        
+        if self.sprite_info[HEALTH] >= 0:
             self.ship_update()
         else:
             self.explosion_update()
