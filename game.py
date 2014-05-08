@@ -18,9 +18,10 @@ from Utilities import HEALTH
 
 # Class gamespace
 class GameSpace:
-	def main(self, localPlayer):
+	def main(self, localPlayer, send_func):
 		# Basic init
 		pygame.init()
+		self.send_func = send_func
 		self.damage = 10
 		self.size = self.width, self.height = 640, 480
 		self.black = 0, 0, 0
@@ -60,6 +61,7 @@ class GameSpace:
 				return
 			elif pygame.mouse.get_pressed()[0]:
 				self.player1.sprite_info[FIRE] = True
+				self.send_func(pickle.dumps(self.player1.sprite_info))
 			elif not pygame.mouse.get_pressed()[0]:
 				self.player1.sprite_info[FIRE] = False
 
@@ -67,7 +69,7 @@ class GameSpace:
 		keysPressed = pygame.key.get_pressed()
 		if keysPressed[pygame.K_a] or keysPressed[pygame.K_d] or keysPressed[pygame.K_w] or keysPressed[pygame.K_s]:
 			self.player1.move(keysPressed) 
-
+			self.send_func(pickle.dumps(self.player1.sprite_info))
 		# update both players
 		self.player1.update()
 		self.player2.update()

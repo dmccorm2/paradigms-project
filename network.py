@@ -16,13 +16,16 @@ INIT_PORT = 8000
 HOST_NAME = ""
 FPS = 60
 
+def send_data(data):
+    connections['game'].transport.write(data)
+
 ####### "HOST" BRANCH ####################
 # For receiving initial connection
 class GameHostConn(Protocol):
     def connectionMade(self):
         print "Created game connection"
         connections['game'] = self
-        game.main("p1")
+        game.main("p1", send_data)
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
 
@@ -70,11 +73,11 @@ class GameClientConn(Protocol):
     def connectionMade(self):
         print "connected to game host"
         connections['game'] = self        
-        game.main("p2")
+        game.main("p2", send_data)
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
-    #def dataReceived(self, data):
-       # game.get_remote(data)
+    def dataReceived(self, data):
+       game.get_remote(data)
 
 class GameClientFactory(ClientFactory):
     protocol = GameClientConn
