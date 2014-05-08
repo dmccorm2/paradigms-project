@@ -80,7 +80,8 @@ class Player(pygame.sprite.Sprite):
         #Calculate rotation, only if local player
         if self.isLocal:
             self.sprite_info[ANGLE] = self.calculate_angle()
-        
+        # if not self.isLocal:
+        #     self.rect = self.rect.move(self.sprite_info[COORD])
         
         #orig_rect = self.rect
         #self.rect = self.rect.move(self.sprite_info[COORD])

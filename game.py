@@ -6,7 +6,8 @@ import math
 import sys
 from player import Player
 from projectile import Projectile
-import cPickle as pickle 
+import pickle
+import pprint
 
 
 #Constants for getting data from network packet
@@ -51,7 +52,16 @@ class GameSpace:
 	# Game single iteration loop
 
 	def get_remote(self, data):
-		self.player2.sprite_info = pickle.loads(data)
+		try:
+			self.player2.sprite_info = pickle.loads(data)
+			pprint.pprint(self.player2.sprite_info)
+			self.player2.rect = self.player2.rect.move(self.player2.sprite_info[COORD])
+		except Exception, e:
+			print e
+		# print self.player2.sprite_info[COORD]
+		# print self.player2.sprite_info[FIRE]
+		# print self.player2.sprite_info[ANGLE]
+		# print self.player2.sprite_info[HEALTH]
 		
 	def iteration(self):
 		# update player2's data from network

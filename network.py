@@ -29,8 +29,8 @@ class GameHostConn(Protocol):
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
 
-    #def dataReceived(self, data):
-       # game.get_remote(data)
+    def dataReceived(self, data):
+       game.get_remote(data)
 
 class GameHostFactory(ClientFactory):
     protocol = GameHostConn
