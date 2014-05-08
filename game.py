@@ -1,12 +1,13 @@
 #Esteban Rojas and Danny McCormack
 #CSE 30332 Final Project
+# 5/7/14
 
 import pygame
 import math
 import sys
 from player import Player
 from projectile import Projectile
-import cPickle as pickle
+import cPickle as pickle # for performance to help syncing across network
 import pprint
 
 
@@ -34,7 +35,6 @@ class GameSpace:
 		self.player2 = Player('player2.png', False, self)
 		
 		#Determine whether local player is player 1 or player 2
-		#localPlayer = sys.argv[1]
 		
 		localCoordinates = (200, 110)
 		awayCoordinates = (200, 300)
@@ -50,18 +50,16 @@ class GameSpace:
 		self.projectileList = []
 
 	# Game single iteration loop
-
+	# Get data (pickled from network)
 	def get_remote(self, data):
+		# use try and catch to only receive pickled information
 		try:
 			self.player2.sprite_info = pickle.loads(data)
 			pprint.pprint(self.player2.sprite_info)
 			#self.player2.rect = self.player2.rect.move(self.player2.sprite_info[COORD])
 		except Exception, e:
 			print e
-		# print self.player2.sprite_info[COORD]
-		# print self.player2.sprite_info[FIRE]
-		# print self.player2.sprite_info[ANGLE]
-		# print self.player2.sprite_info[HEALTH]
+
 		
 	def iteration(self):
 		# update player2's data from network
@@ -93,7 +91,7 @@ class GameSpace:
 		# update display
 		self.display_game()
 
-
+	# basic function to handle blitting, etc.
 	def display_game(self):
 		self.screen.fill(self.black)
 		
@@ -105,22 +103,4 @@ class GameSpace:
 
 		pygame.display.flip()
 
-	# simple function to create matching dictionary from arguments
-	# make loop iteration less cluttered
-	def assemble_data(self, x, y, angle, fired, health):
-		data = {
-			COORD: (x, y),
-			ANGLE: angle,
-			FIRE: fired,
-			HEALTH: health
-		}
-		return data
 
-
-# if __name__ == '__main__':
-
-
-# 	# Declare gamespace
-# 	gs = GameSpace()
-# 	gs.main()
-	
