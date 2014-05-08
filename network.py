@@ -1,3 +1,10 @@
+# Dan McCormack and Esteban Rojas
+# Final Project
+# Programming Paradigms
+# 5/7/14
+
+
+
 from game import GameSpace
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
