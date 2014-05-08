@@ -79,7 +79,7 @@ class GameSpace:
 		keysPressed = pygame.key.get_pressed()
 		if keysPressed[pygame.K_a] or keysPressed[pygame.K_d] or keysPressed[pygame.K_w] or keysPressed[pygame.K_s]:
 			self.player1.move(keysPressed) 
-			#self.send_func(pickle.dumps(self.player1.sprite_info))
+			self.send_func(pickle.dumps(self.player1.sprite_info))
 
 		# update both players
 		self.player1.update()
