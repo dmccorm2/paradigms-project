@@ -51,6 +51,7 @@ class GameSpace:
 
 	def get_remote(self, data):
 		self.player2.sprite_info = pickle.loads(data)
+		
 	def iteration(self):
 		# update player2's data from network
 		# Handle firing from mouse click

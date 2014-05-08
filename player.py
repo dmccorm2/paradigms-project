@@ -53,13 +53,17 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, eventList):
         if eventList[pygame.K_a]:
-            self.rect = self.rect.move(-SPEED, 0)
+            self.sprite_info[COORD] = (-SPEED, 0)
         elif eventList[pygame.K_d]:
-            self.rect = self.rect.move(SPEED, 0)
+            self.sprite_info[COORD] = (SPEED, 0)
         elif eventList[pygame.K_w]:
-            self.rect = self.rect.move(0, -SPEED)
+            self.sprite_info[COORD] = (0, -SPEED)
         elif eventList[pygame.K_s]:
-            self.rect = self.rect.move(0, SPEED)
+            self.sprite_info[COORD] = (0, SPEED)
+            
+        self.rect = self.rect.move(self.sprite_info[COORD])
+        
+        #FIXME: Send the data to the network
 
     #Update the current player's variables
     def update(self):
@@ -78,8 +82,8 @@ class Player(pygame.sprite.Sprite):
             self.sprite_info[ANGLE] = self.calculate_angle()
         
         
-        orig_rect = self.rect
-        self.rect = self.rect.move(self.sprite_info[COORD])
+        #orig_rect = self.rect
+        #self.rect = self.rect.move(self.sprite_info[COORD])
                 
         if self.sprite_info[FIRE] == True:
             rotationRad = math.radians(self.sprite_info[ANGLE])
@@ -95,14 +99,8 @@ class Player(pygame.sprite.Sprite):
             # add to projectile list
             self.gs.projectileList.append(newProjectile)
             
-            #Update the image based on the mouse position
-            self.image = Utilities.rot_center(self.orig_image, self.sprite_info[ANGLE] + 40)
-        else:
-            #If not firing, just update the ship image
-            center = self.rect.center
-            self.image = pygame.transform.rotate(self.orig_image, self.sprite_info[ANGLE])
-            self.rect = self.image.get_rect()
-            self.rect.center = center
+        #Update the image based on the mouse position
+        self.image = Utilities.rot_center(self.orig_image, self.sprite_info[ANGLE] + 40)
         
         #Check if the player's ship is colliding with a projectile
         hasCollision = False
