@@ -21,52 +21,45 @@ FPS = 60
 class GameHostConn(Protocol):
     def connectionMade(self):
         print "Created game connection"
+        connections['game'] = self
         game.main("p1")
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
 
-    def dataReceived(self, data):
-        game.get_remote(data)
+    #def dataReceived(self, data):
+       # game.get_remote(data)
 
-class GameHostFactory(Factory):
-    def buildProtocol(self, addr):
-        print "Made to Game Factory..."
-        protocol = GameHostConn()
-        connections['game'] = protocol
-        return protocol
+class GameHostFactory(ClientFactory):
+    protocol = GameHostConn
 
 class InitConn(Protocol):
     def connectionMade(self):
         print "Other player joined..."
+        connections['init'] = self
         self.transport.write("start game")
         # Using listenTCP instead of endpoints to make code more flexible
         reactor.listenTCP(GAME_PORT, GameHostFactory()) # Initial connection made to 
     def dataReceived(self, data):
         pass
 
-class InitFactory(Factory):
-    def buildProtocol(self, addr):
-        print "Listening in factory..."
-        init_prot = InitConn()
-        connections['init'] = init_prot
-        return init_prot
+class InitFactory(ClientFactory):
+    protocol = InitConn
 
 ##################################
 
 ##### CLIENT BRANCH############
 class InitClientConn(Protocol):
+    def connectionMade(self):
+        connections['init'] = self
     def dataReceived(self, data):
         if(data == "start game"):
             reactor.connectTCP(HOST_NAME, GAME_PORT, GameClientFactory())
 
 
 class InitClientFactory(ClientFactory):
+    protocol = InitClientConn
     def startedConnecting(self, connector):
         print "Began Initial Connection"
-    def buildProtocol(self, addr):
-        print "Building client game connection"
-        connections['init'] = InitClientConn()
-        return connections['init']
 
     def clientConnectionLost(self, connector, reason):
         print "ERROR: Lost initial connection\n", reason
@@ -76,20 +69,17 @@ class InitClientFactory(ClientFactory):
 class GameClientConn(Protocol):
     def connectionMade(self):
         print "connected to game host"
-    def dataReceived(self, data):
-        game.get_remote(data)
-
-class GameClientFactory(ClientFactory):
-    def startedConnecting(self, connector):
-        print "Began game connection with host"
-    def buildProtocol(self, addr):
-        connections['game'] = GameClientConn()
+        connections['game'] = self        
         game.main("p2")
         loop = LoopingCall(game.iteration)
         loop.start(float(1/60))
-        
-        return connections['game'] 
+    #def dataReceived(self, data):
+       # game.get_remote(data)
 
+class GameClientFactory(ClientFactory):
+    protocol = GameClientConn
+    def startedConnecting(self, connector):
+        print "Began game connection with host"
     def clientConnectionLost(self, connector, reason):
         print "ERROR: Lost Connection\n", reason
     def clientConnectionFailed(self, connector, reason):
