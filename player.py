@@ -61,14 +61,15 @@ class Player(pygame.sprite.Sprite):
         elif eventList[pygame.K_s]:
             self.sprite_info[COORD] = (0, SPEED)
             
-        self.rect = self.rect.move(self.sprite_info[COORD])
+       # self.rect = self.rect.move(self.sprite_info[COORD])
         
         #FIXME: Send the data to the network
 
     #Update the current player's variables
     def update(self):
         #Update the right set of images and variables depending on whether the player is still alive
-        
+        self.rect = self.rect.move(self.sprite_info[COORD])
+        self.sprite_info[COORD] = (0,0)
         if self.sprite_info[HEALTH] >= 0:
             self.ship_update()
         else:
@@ -80,8 +81,8 @@ class Player(pygame.sprite.Sprite):
         #Calculate rotation, only if local player
         if self.isLocal:
             self.sprite_info[ANGLE] = self.calculate_angle()
-        if not self.isLocal:
-            self.rect = self.rect.move(self.sprite_info[COORD])
+        # if not self.isLocal:
+        #     self.rect = self.rect.move(self.sprite_info[COORD])
         
         #orig_rect = self.rect
         #self.rect = self.rect.move(self.sprite_info[COORD])
