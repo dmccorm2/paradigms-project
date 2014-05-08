@@ -1,0 +1,20 @@
+To play 2 player game:
+  Decide who is hosting and who will join the game
+  
+  HOST:
+   + Run "python2.6 network.py host" on a compatible (student) machine
+   + Wait for the other player to join
+   
+  JOINING (Client):
+   + Get the hostname for the client (preferably IP)
+   + Run "python2.6 network.py join <HOST IP>
+  
+  Game will Launch
+  
+  To Play the Game:
+    * use WASD to move your ship (blue)
+    * Fire your laser with left click at the enemy (gold)
+    * Winner is last man standing (and can revel in their glory for all eternity)
+    * Be careful of your own fire
+    
+  
